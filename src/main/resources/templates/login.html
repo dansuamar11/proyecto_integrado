@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio de sesion</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+    <main class="contenedor centrado">
+        <section class="tarjeta formulario">
+            <h1>Acceso a la plataforma</h1>
+            <form action="/login" method="post">
+                <label>Usuario</label>
+                <input type="text" name="username" required>
+
+                <label>Contrasena</label>
+                <input type="password" name="password" required>
+
+                <button type="submit">Entrar</button>
+            </form>
+
+            <p>Usuarios de prueba:</p>
+            <p>`admin/admin123`, `gerente/gerente123`, `arbitro1/arbitro123`, `entrenador1/entrenador123`</p>
+        </section>
+    </main>
+</body>
+</html>

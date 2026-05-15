@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Administrar equipo</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+    <header class="cabecera">
+        <h1 th:text="${'Administrar equipo: ' + equipo.nombre}"></h1>
+        <nav>
+            <a th:href="@{/}">Inicio</a>
+            <a th:href="@{/logout}">Cerrar sesion</a>
+        </nav>
+    </header>
+
+    <main class="contenedor dos-columnas">
+        <section class="tarjeta formulario">
+            <h2>Alta de jugador</h2>
+            <p th:if="${mensajeExito != null}" class="mensaje-exito" th:text="${mensajeExito}"></p>
+            <form th:action="@{/entrenador/jugadores}" method="post" th:object="${formularioJugador}">
+                <label>Nombre</label>
+                <input type="text" th:field="*{nombre}" required>
+
+                <label>Apellidos</label>
+                <input type="text" th:field="*{apellidos}" required>
+
+                <button type="submit">Crear jugador</button>
+            </form>
+        </section>
+
+        <section class="tarjeta">
+            <h2>Plantilla</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Jugador</th>
+                        <th>Estado</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="jugador : ${jugadores}">
+                        <td th:text="${jugador.nombre + ' ' + jugador.apellidos}"></td>
+                        <td th:text="${jugador.activo ? 'Activo' : 'Inactivo'}"></td>
+                        <td>
+                            <form th:if="${jugador.activo}" th:action="@{'/entrenador/jugadores/' + ${jugador.idJugador} + '/baja'}" method="post">
+                                <button type="submit">Dar baja</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Estadisticas</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+    <header class="cabecera">
+        <h1>Estadisticas individuales</h1>
+        <nav>
+            <a th:href="@{/}">Inicio</a>
+            <a th:href="@{/clasificacion}">Clasificacion</a>
+            <a th:href="@{/calendario}">Calendario</a>
+            <a th:href="@{/contacto}">Contacto</a>
+            <a th:if="${usuarioActual != null}" th:href="@{/panel}">Mi panel</a>
+            <a th:if="${usuarioActual == null}" th:href="@{/login}">Iniciar sesion</a>
+            <a th:if="${usuarioActual != null}" th:href="@{/logout}">Cerrar sesion</a>
+        </nav>
+    </header>
+
+    <main class="contenedor">
+        <section class="tarjeta">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Jugador</th>
+                        <th>Equipo</th>
+                        <th>Puntos</th>
+                        <th>Rebotes</th>
+                        <th>Asistencias</th>
+                        <th>Minutos</th>
+                        <th>Faltas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="estadistica : ${estadisticas}">
+                        <td th:text="${estadistica.nombreJugador()}"></td>
+                        <td th:text="${estadistica.nombreEquipo()}"></td>
+                        <td th:text="${estadistica.puntos()}"></td>
+                        <td th:text="${estadistica.rebotes()}"></td>
+                        <td th:text="${estadistica.asistencias()}"></td>
+                        <td th:text="${estadistica.minutos()}"></td>
+                        <td th:text="${estadistica.faltas()}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,107 @@
+
+> basket-aljarafe@0.0.0 start
+> ng serve --host 0.0.0.0 --port 4201
+
+[1m[33m
+Warning: This is a simple server for use in testing or debugging Angular applications
+locally. It hasn't been reviewed for security issues.
+
+Binding this server to an open connection can result in compromising your application or
+computer. Using a different host than the one passed to the "--host" flag might result in
+websocket connection issues.
+    [39m[22m
+[33m❯[39m Building...
+[32m✔[39m Building...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m         [2m | [22m[36m162.52 kB[39m[2m | [22m
+[32mstyles.css[39m         [2m | [22m[2mstyles[22m       [2m | [22m  [36m1.90 kB[39m[2m | [22m
+
+[1m [22m                  [2m | [22m[1mInitial total[22m[2m | [22m[1m164.42 kB[22m
+
+Application bundle generation complete. [1.410 seconds] - 2026-04-23T11:42:54.942Z
+
+Watch mode enabled. Watching for file changes...
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m4201[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://172.20.48.1:[1m4201[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://192.168.0.20:[1m4201[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://192.168.56.1:[1m4201[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m[2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m [2m | [22m[36m162.76 kB[39m[2m | [22m
+
+Application bundle generation complete. [1.165 seconds] - 2026-04-23T11:46:54.121Z
+
+Page reload sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m[2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m [2m | [22m[36m163.18 kB[39m[2m | [22m
+
+Application bundle generation complete. [0.446 seconds] - 2026-04-23T11:46:59.898Z
+
+Page reload sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m[2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m [2m | [22m[36m164.42 kB[39m[2m | [22m
+
+Application bundle generation complete. [0.444 seconds] - 2026-04-23T11:47:04.423Z
+
+Component update sent to client(s).
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.939 seconds] - 2026-04-23T11:47:25.455Z
+
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'puedeVerGerente' does not exist on type 'App'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.html:36:38:
+[37m      36 │           <li class="nav-item" *ngIf="[32mpuedeVerGerente[37m()">
+         ╵                                       [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component App.
+
+    src/app/app.ts:9:15:
+[37m      9 │   templateUrl: [32m'./app.html'[37m,
+        ╵                [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'puedeVerEntrenador' does not exist on type 'App'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.html:41:38:
+[37m      41 │           <li class="nav-item" *ngIf="[32mpuedeVerEntrenador[37m()">
+         ╵                                       [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component App.
+
+    src/app/app.ts:9:15:
+[37m      9 │   templateUrl: [32m'./app.html'[37m,
+        ╵                [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'puedeVerArbitro' does not exist on type 'App'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.html:46:38:
+[37m      46 │           <li class="nav-item" *ngIf="[32mpuedeVerArbitro[37m()">
+         ╵                                       [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component App.
+
+    src/app/app.ts:9:15:
+[37m      9 │   templateUrl: [32m'./app.html'[37m,
+        ╵                [32m~~~~~~~~~~~~[0m
+
+[39m[22m
+[33m❯[39m Changes detected. Rebuilding...
+[32m✔[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m         [2m | [22m[36m164.37 kB[39m[2m | [22m
+[32mstyles.css[39m         [2m | [22m[2mstyles[22m       [2m | [22m  [36m1.90 kB[39m[2m | [22m
+
+[1m [22m                  [2m | [22m[1mInitial total[22m[2m | [22m[1m166.27 kB[22m
+
+Application bundle generation complete. [0.406 seconds] - 2026-04-23T11:47:35.454Z
+
+Page reload sent to client(s).

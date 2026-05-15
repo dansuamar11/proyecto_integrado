@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Clasificacion</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+    <header class="cabecera">
+        <h1>Clasificacion</h1>
+        <nav>
+            <a th:href="@{/}">Inicio</a>
+            <a th:href="@{/calendario}">Calendario</a>
+            <a th:href="@{/estadisticas}">Estadisticas</a>
+            <a th:href="@{/contacto}">Contacto</a>
+            <a th:if="${usuarioActual != null}" th:href="@{/panel}">Mi panel</a>
+            <a th:if="${usuarioActual == null}" th:href="@{/login}">Iniciar sesion</a>
+            <a th:if="${usuarioActual != null}" th:href="@{/logout}">Cerrar sesion</a>
+        </nav>
+    </header>
+
+    <main class="contenedor">
+        <section class="tarjeta">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pos.</th>
+                        <th>Equipo</th>
+                        <th>PJ</th>
+                        <th>PG</th>
+                        <th>PF</th>
+                        <th>PC</th>
+                        <th>+/-</th>
+                        <th>REB</th>
+                        <th>AST</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="fila : ${clasificacion}">
+                        <td th:text="${fila.posicion()}"></td>
+                        <td th:text="${fila.nombreEquipo()}"></td>
+                        <td th:text="${fila.partidosJugados()}"></td>
+                        <td th:text="${fila.partidosGanados()}"></td>
+                        <td th:text="${fila.puntosFavor()}"></td>
+                        <td th:text="${fila.puntosContra()}"></td>
+                        <td th:text="${fila.diferenciaPuntos()}"></td>
+                        <td th:text="${fila.rebotes()}"></td>
+                        <td th:text="${fila.asistencias()}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>

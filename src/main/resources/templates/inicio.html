@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Liga Local del Aljarafe</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+    <header class="cabecera">
+        <h1>Liga Local del Aljarafe</h1>
+        <nav>
+            <a th:href="@{/}">Inicio</a>
+            <a th:href="@{/clasificacion}">Clasificacion</a>
+            <a th:href="@{/calendario}">Calendario</a>
+            <a th:href="@{/estadisticas}">Estadisticas</a>
+            <a th:href="@{/contacto}">Contacto</a>
+            <a th:if="${usuarioActual != null}" th:href="@{/panel}">Mi panel</a>
+            <a th:if="${usuarioActual == null}" th:href="@{/login}">Iniciar sesion</a>
+            <a th:if="${usuarioActual != null}" th:href="@{/logout}">Cerrar sesion</a>
+        </nav>
+    </header>
+
+    <main class="contenedor">
+        <section class="hero">
+            <h2 th:text="${resumenInicio.nombreLiga}"></h2>
+            <p th:text="${resumenInicio.descripcion}"></p>
+        </section>
+
+        <section class="tarjeta">
+            <h3>Clasificacion resumida</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pos.</th>
+                        <th>Equipo</th>
+                        <th>PG</th>
+                        <th>PF</th>
+                        <th>PC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="fila : ${resumenInicio.clasificacionResumida}">
+                        <td th:text="${fila.posicion()}"></td>
+                        <td th:text="${fila.nombreEquipo()}"></td>
+                        <td th:text="${fila.partidosGanados()}"></td>
+                        <td th:text="${fila.puntosFavor()}"></td>
+                        <td th:text="${fila.puntosContra()}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>

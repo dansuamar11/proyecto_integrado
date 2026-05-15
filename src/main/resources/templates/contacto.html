@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Contacto</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+    <header class="cabecera">
+        <h1>Contacto e inscripcion</h1>
+        <nav>
+            <a th:href="@{/}">Inicio</a>
+            <a th:href="@{/clasificacion}">Clasificacion</a>
+            <a th:href="@{/calendario}">Calendario</a>
+            <a th:href="@{/estadisticas}">Estadisticas</a>
+            <a th:if="${usuarioActual != null}" th:href="@{/panel}">Mi panel</a>
+            <a th:if="${usuarioActual == null}" th:href="@{/login}">Iniciar sesion</a>
+            <a th:if="${usuarioActual != null}" th:href="@{/logout}">Cerrar sesion</a>
+        </nav>
+    </header>
+
+    <main class="contenedor">
+        <section class="tarjeta formulario">
+            <p th:if="${mensajeExito != null}" class="mensaje-exito" th:text="${mensajeExito}"></p>
+            <form th:action="@{/contacto/enviar}" method="post" th:object="${formularioContacto}">
+                <label>Nombre de contacto</label>
+                <input type="text" th:field="*{nombreContacto}" required>
+
+                <label>Correo electronico</label>
+                <input type="email" th:field="*{correoContacto}" required>
+
+                <label>Telefono</label>
+                <input type="text" th:field="*{telefonoContacto}">
+
+                <label>Mensaje</label>
+                <textarea th:field="*{mensaje}" rows="5" required></textarea>
+
+                <button type="submit">Enviar solicitud</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

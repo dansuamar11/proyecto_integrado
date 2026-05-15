@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Acta completa del partido</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+    <header class="cabecera">
+        <h1 th:text="${actaPartido.nombreEquipoLocal + ' vs ' + actaPartido.nombreEquipoVisitante}"></h1>
+        <nav>
+            <a th:href="@{/arbitro/ficha-partidos}">Volver a partidos</a>
+            <a th:href="@{/logout}">Cerrar sesion</a>
+        </nav>
+    </header>
+
+    <main class="contenedor">
+        <section class="tarjeta formulario">
+            <p th:if="${mensajeExito != null}" class="mensaje-exito" th:text="${mensajeExito}"></p>
+            <p th:text="${'Marcador actual: ' + actaPartido.puntosLocal + ' - ' + actaPartido.puntosVisitante}"></p>
+            <p>Los puntos finales del partido se calculan automaticamente con la suma de puntos de los jugadores de cada equipo.</p>
+
+            <form th:action="@{'/arbitro/partidos/' + ${actaPartido.idPartido} + '/acta'}" method="post" th:object="${actaPartido}">
+                <input type="hidden" th:field="*{idPartido}">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Equipo</th>
+                            <th>Jugador</th>
+                            <th>Puntos</th>
+                            <th>Asistencias</th>
+                            <th>Rebotes</th>
+                            <th>Faltas</th>
+                            <th>Minutos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="estadistica, iter : *{estadisticasJugadores}">
+                            <td th:text="${estadistica.nombreEquipo}"></td>
+                            <td th:text="${estadistica.nombreJugador}"></td>
+                            <td>
+                                <input type="hidden" th:field="*{estadisticasJugadores[__${iter.index}__].idJugador}">
+                                <input type="hidden" th:field="*{estadisticasJugadores[__${iter.index}__].nombreJugador}">
+                                <input type="hidden" th:field="*{estadisticasJugadores[__${iter.index}__].nombreEquipo}">
+                                <input type="number" min="0" th:field="*{estadisticasJugadores[__${iter.index}__].puntos}">
+                            </td>
+                            <td><input type="number" min="0" th:field="*{estadisticasJugadores[__${iter.index}__].asistencias}"></td>
+                            <td><input type="number" min="0" th:field="*{estadisticasJugadores[__${iter.index}__].rebotes}"></td>
+                            <td><input type="number" min="0" th:field="*{estadisticasJugadores[__${iter.index}__].faltas}"></td>
+                            <td><input type="number" min="0" th:field="*{estadisticasJugadores[__${iter.index}__].minutos}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <button type="submit">Guardar ficha completa</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

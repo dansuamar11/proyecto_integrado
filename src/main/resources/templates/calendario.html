@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Calendario</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+    <header class="cabecera">
+        <h1>Calendario y resultados</h1>
+        <nav>
+            <a th:href="@{/}">Inicio</a>
+            <a th:href="@{/clasificacion}">Clasificacion</a>
+            <a th:href="@{/estadisticas}">Estadisticas</a>
+            <a th:href="@{/contacto}">Contacto</a>
+            <a th:if="${usuarioActual != null}" th:href="@{/panel}">Mi panel</a>
+            <a th:if="${usuarioActual == null}" th:href="@{/login}">Iniciar sesion</a>
+            <a th:if="${usuarioActual != null}" th:href="@{/logout}">Cerrar sesion</a>
+        </nav>
+    </header>
+
+    <main class="contenedor">
+        <section class="tarjeta lista-partidos">
+            <article th:each="partido : ${partidos}">
+                <h3 th:text="${partido.equipoLocal.nombre + ' vs ' + partido.equipoVisitante.nombre}"></h3>
+                <p th:text="${#temporals.format(partido.fecha, 'dd/MM/yyyy HH:mm')}"></p>
+                <p th:text="${partido.estado.name()}"></p>
+                <p th:if="${partido.estado.name() == 'JUGADO'}"
+                   th:text="${partido.puntosLocal + ' - ' + partido.puntosVisitante}"></p>
+                <p th:if="${partido.arbitro != null}" th:text="${'Arbitro: ' + partido.arbitro.nombreUsuario}"></p>
+            </article>
+        </section>
+    </main>
+</body>
+</html>

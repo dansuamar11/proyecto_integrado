@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ficha de partidos</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+    <header class="cabecera">
+        <h1>Ficha de partidos</h1>
+        <nav>
+            <a th:href="@{/}">Inicio</a>
+            <a th:href="@{/logout}">Cerrar sesion</a>
+        </nav>
+    </header>
+
+    <main class="contenedor">
+        <p th:if="${mensajeExito != null}" class="mensaje-exito" th:text="${mensajeExito}"></p>
+        <section class="tarjeta lista-partidos" th:each="partido : ${partidos}">
+            <h2 th:text="${partido.equipoLocal.nombre + ' vs ' + partido.equipoVisitante.nombre}"></h2>
+            <p th:text="${#temporals.format(partido.fecha, 'dd/MM/yyyy HH:mm')}"></p>
+            <p th:text="${'Estado actual: ' + partido.estado.name()}"></p>
+            <p th:if="${partido.estado.name() == 'JUGADO'}" th:text="${'Marcador guardado: ' + partido.puntosLocal + ' - ' + partido.puntosVisitante}"></p>
+            <a th:href="@{'/arbitro/partidos/' + ${partido.idPartido} + '/acta'}" target="_blank">Abrir ficha completa del partido</a>
+        </section>
+    </main>
+</body>
+</html>

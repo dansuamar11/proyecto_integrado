@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Administrar liga</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+    <header class="cabecera">
+        <h1>Administrar liga</h1>
+        <nav>
+            <a th:href="@{/}">Inicio</a>
+            <a th:href="@{/logout}">Cerrar sesion</a>
+        </nav>
+    </header>
+
+    <main class="contenedor dos-columnas">
+        <section class="tarjeta formulario">
+            <h2>Alta de usuarios</h2>
+            <p th:if="${mensajeExito != null}" class="mensaje-exito" th:text="${mensajeExito}"></p>
+            <form th:action="@{/gerente/usuarios}" method="post" th:object="${formularioUsuario}">
+                <label>Nombre completo</label>
+                <input type="text" th:field="*{nombreUsuario}" required>
+
+                <label>Username</label>
+                <input type="text" th:field="*{username}" required>
+
+                <label>Contrasena</label>
+                <input type="password" th:field="*{password}" required>
+
+                <label>Rol</label>
+                <select th:field="*{nombreRol}">
+                    <option value="ARBITRO">ARBITRO</option>
+                    <option value="ENTRENADOR">ENTRENADOR</option>
+                    <option th:if="${esAdmin}" value="GERENTE">GERENTE</option>
+                    <option th:if="${esAdmin}" value="ADMIN">ADMIN</option>
+                </select>
+
+                <button type="submit">Crear usuario</button>
+            </form>
+        </section>
+
+        <section class="tarjeta formulario">
+            <h2>Alta de equipos</h2>
+            <form th:action="@{/gerente/equipos}" method="post" th:object="${formularioEquipo}">
+                <label>Nombre del equipo</label>
+                <input type="text" th:field="*{nombre}" required>
+
+                <label>Entrenador</label>
+                <select th:field="*{idEntrenador}">
+                    <option th:each="entrenador : ${entrenadores}"
+                            th:value="${entrenador.idUsuario}"
+                            th:text="${entrenador.nombreUsuario}"></option>
+                </select>
+
+                <button type="submit">Crear equipo</button>
+            </form>
+        </section>
+
+        <section class="tarjeta formulario">
+            <h2>Cambiar entrenador de equipo</h2>
+            <form th:action="@{/gerente/equipos/cambiar-entrenador}" method="post" th:object="${formularioCambioEntrenador}">
+                <label>Equipo</label>
+                <select th:field="*{idEquipo}">
+                    <option th:each="equipo : ${equipos}"
+                            th:value="${equipo.idEquipo}"
+                            th:text="${equipo.nombre}"></option>
+                </select>
+
+                <label>Nuevo entrenador</label>
+                <select th:field="*{idEntrenador}">
+                    <option th:each="entrenador : ${entrenadores}"
+                            th:value="${entrenador.idUsuario}"
+                            th:text="${entrenador.nombreUsuario}"></option>
+                </select>
+
+                <button type="submit">Cambiar entrenador</button>
+            </form>
+        </section>
+
+        <section class="tarjeta">
+            <h2>Usuarios registrados</h2>
+            <ul>
+                <li th:each="usuario : ${usuarios}"
+                    th:text="${usuario.nombreUsuario + ' - ' + usuario.rol.nombreRol}"></li>
+            </ul>
+        </section>
+
+        <section class="tarjeta">
+            <h2>Equipos registrados</h2>
+            <ul>
+                <li th:each="equipo : ${equipos}"
+                    th:text="${equipo.nombre + ' - ' + (equipo.entrenador != null ? equipo.entrenador.nombreUsuario : 'Sin entrenador')}"></li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>
