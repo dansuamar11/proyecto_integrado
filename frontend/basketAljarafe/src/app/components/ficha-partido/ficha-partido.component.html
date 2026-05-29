@@ -1,0 +1,100 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 section-title mb-1">
+      {{ fichaPartido?.nombreEquipoLocal }} vs {{ fichaPartido?.nombreEquipoVisitante }}
+    </h1>
+    <p class="text-secondary mb-0">Ficha informativa del partido seleccionado.</p>
+  </div>
+  <a class="btn btn-outline-success" routerLink="/calendario">Volver a calendario</a>
+</div>
+
+<div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+
+<div class="card page-card" *ngIf="!error && fichaPartido">
+  <div class="card-body p-4">
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <div class="metric-box">
+          <p class="text-secondary mb-1">{{ fichaPartido.nombreEquipoLocal }}</p>
+          <p class="display-6 mb-0 fw-bold">{{ mostrarValor(fichaPartido.puntosLocal) }}</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="metric-box">
+          <p class="text-secondary mb-1">{{ fichaPartido.nombreEquipoVisitante }}</p>
+          <p class="display-6 mb-0 fw-bold">{{ mostrarValor(fichaPartido.puntosVisitante) }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-xl-6">
+        <section class="team-sheet">
+          <h2 class="h5 section-title mb-3">{{ fichaPartido.nombreEquipoLocal }}</h2>
+
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Jugador</th>
+                  <th>Dorsal</th>
+                  <th>PTS</th>
+                  <th>AST</th>
+                  <th>REB</th>
+                  <th>FLT</th>
+                  <th>MIN</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Directiva que sirve para recorrer los jugadores del equipo local. -->
+                <tr *ngFor="let estadistica of obtenerEstadisticasLocal()">
+                  <td>{{ estadistica.nombreJugador }}</td>
+                  <td>{{ formatearDorsal(estadistica.dorsal) }}</td>
+                  <td>{{ mostrarValor(estadistica.puntos) }}</td>
+                  <td>{{ mostrarValor(estadistica.asistencias) }}</td>
+                  <td>{{ mostrarValor(estadistica.rebotes) }}</td>
+                  <td>{{ mostrarValor(estadistica.faltas) }}</td>
+                  <td>{{ mostrarValor(estadistica.minutos) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <div class="col-xl-6">
+        <section class="team-sheet">
+          <h2 class="h5 section-title mb-3">{{ fichaPartido.nombreEquipoVisitante }}</h2>
+
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Jugador</th>
+                  <th>Dorsal</th>
+                  <th>PTS</th>
+                  <th>AST</th>
+                  <th>REB</th>
+                  <th>FLT</th>
+                  <th>MIN</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Directiva que sirve para recorrer los jugadores del equipo visitante. -->
+                <tr *ngFor="let estadistica of obtenerEstadisticasVisitante()">
+                  <td>{{ estadistica.nombreJugador }}</td>
+                  <td>{{ formatearDorsal(estadistica.dorsal) }}</td>
+                  <td>{{ mostrarValor(estadistica.puntos) }}</td>
+                  <td>{{ mostrarValor(estadistica.asistencias) }}</td>
+                  <td>{{ mostrarValor(estadistica.rebotes) }}</td>
+                  <td>{{ mostrarValor(estadistica.faltas) }}</td>
+                  <td>{{ mostrarValor(estadistica.minutos) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>

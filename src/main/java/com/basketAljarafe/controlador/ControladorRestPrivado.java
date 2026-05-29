@@ -18,14 +18,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.basketAljarafe.dto.ActaPartidoDto;
+import com.basketAljarafe.dto.FormularioAsignacionArbitroDto;
 import com.basketAljarafe.dto.FormularioCambioEntrenadorDto;
 import com.basketAljarafe.dto.FormularioEquipoDto;
+import com.basketAljarafe.dto.FormularioGenerarPartidoDto;
 import com.basketAljarafe.dto.FormularioJugadorDto;
 import com.basketAljarafe.dto.FormularioLoginDto;
 import com.basketAljarafe.dto.FormularioUsuarioDto;
 import com.basketAljarafe.entidad.Equipo;
 import com.basketAljarafe.entidad.Jugador;
 import com.basketAljarafe.entidad.Partido;
+import com.basketAljarafe.entidad.SolicitudContacto;
 import com.basketAljarafe.entidad.Usuario;
 import com.basketAljarafe.servicio.ServicioArbitro;
 import com.basketAljarafe.servicio.ServicioEntrenador;
@@ -115,6 +118,30 @@ public class ControladorRestPrivado {
 		return servicioGerente.obtenerEntrenadores();
 	}
 
+	@GetMapping("/gerente/arbitros")
+	// Metodo que sirve para devolver todos los arbitros activos para el gerente.
+	public List<Usuario> obtenerArbitros() {
+		return servicioGerente.obtenerArbitros();
+	}
+
+	@GetMapping("/gerente/partidos-sin-arbitro")
+	// Metodo que sirve para devolver los partidos pendientes que aun no tienen arbitro.
+	public List<Partido> obtenerPartidosSinArbitro() {
+		return servicioGerente.obtenerPartidosSinArbitro();
+	}
+
+	@GetMapping("/gerente/partidos-pendientes")
+	// Metodo que sirve para devolver todos los partidos pendientes para asignar o cambiar arbitro.
+	public List<Partido> obtenerPartidosPendientes() {
+		return servicioGerente.obtenerPartidosPendientes();
+	}
+
+	@GetMapping("/gerente/solicitudes-contacto")
+	// Metodo que sirve para devolver las solicitudes recibidas desde la pagina de contacto.
+	public List<SolicitudContacto> obtenerSolicitudesContacto() {
+		return servicioGerente.obtenerSolicitudesContacto();
+	}
+
 	@PostMapping("/gerente/equipos")
 	@ResponseStatus(HttpStatus.CREATED)
 	// Metodo que sirve para crear un equipo desde la API del gerente.
@@ -176,6 +203,26 @@ public class ControladorRestPrivado {
 	public Partido registrarActa(@PathVariable Integer idPartido, @RequestBody ActaPartidoDto actaPartidoDto,
 			Principal principal) {
 		return servicioArbitro.registrarActa(principal.getName(), idPartido, actaPartidoDto);
+	}
+
+	@PostMapping("/gerente/solicitudes-contacto/{idSolicitud}/eliminar")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	// Metodo que sirve para eliminar una solicitud de contacto desde la API del gerente.
+	public void eliminarSolicitudContacto(@PathVariable Integer idSolicitud) {
+		servicioGerente.eliminarSolicitudContacto(idSolicitud);
+	}
+
+	@PostMapping("/gerente/partidos")
+	@ResponseStatus(HttpStatus.CREATED)
+	// Metodo que sirve para crear un nuevo partido desde la API del gerente.
+	public Partido generarPartido(@RequestBody FormularioGenerarPartidoDto formulario) {
+		return servicioGerente.generarPartido(formulario);
+	}
+
+	@PostMapping("/gerente/partidos/asignar-arbitro")
+	// Metodo que sirve para asignar un arbitro activo a un partido pendiente.
+	public Partido asignarArbitroAPartido(@RequestBody FormularioAsignacionArbitroDto formulario) {
+		return servicioGerente.asignarArbitroAPartido(formulario);
 	}
 
 	// Metodo que sirve para comprobar si el usuario autenticado actual tiene rol de administrador.

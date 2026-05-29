@@ -2,6 +2,7 @@
   "name": "basket-aljarafe-workspace",
   "private": true,
   "scripts": {
+    "dev": "npm run dev:full",
     "dev:full": "powershell -ExecutionPolicy Bypass -File .\\scripts\\start-dev.ps1",
     "dev:stop": "powershell -ExecutionPolicy Bypass -File .\\scripts\\stop-dev.ps1"
   }

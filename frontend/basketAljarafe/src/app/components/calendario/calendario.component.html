@@ -1,0 +1,131 @@
+<div class="card page-card">
+  <div class="card-body p-4">
+    <h1 class="h3 section-title mb-3">Calendario y resultados</h1>
+    <p class="text-secondary mb-4">Consulta los cruces, el estado del partido y el árbitro asignado.</p>
+
+    <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+
+    <div *ngIf="!error && partidos.length > 0">
+      <div class="row g-3 align-items-end mb-4">
+        <div class="col-lg-5">
+          <label class="form-label" for="equipoCalendario">Equipo</label>
+          <!-- Directiva que sirve para actualizar el filtro del calendario al cambiar el equipo seleccionado. -->
+          <select
+            id="equipoCalendario"
+            class="form-select"
+            [value]="equipoSeleccionado"
+            (change)="actualizarEquipoSeleccionado($event)">
+            <option value="">Todos los equipos</option>
+            <!-- Directiva que sirve para recorrer los equipos disponibles del selector. -->
+            <option *ngFor="let equipo of equiposDisponibles" [value]="equipo">{{ equipo }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-xl-6">
+          <section class="calendar-column h-100">
+            <div class="calendar-column__header">
+              <div>
+                <h2 class="h5 section-title mb-1">Partidos jugados</h2>
+                <p class="text-secondary mb-0">{{ obtenerResumenJugados() }}</p>
+              </div>
+            </div>
+
+            <div class="d-grid gap-3">
+              <!-- Directiva que sirve para recorrer los partidos jugados de la pagina actual. -->
+              <article
+                class="calendar-match-card calendar-match-card--played"
+                *ngFor="let partido of obtenerPartidosJugadosPagina()"
+                [routerLink]="['/partidos', partido.idPartido]">
+                <div class="card-body">
+                  <div class="d-flex flex-column flex-lg-row justify-content-between gap-3">
+                    <div>
+                      <h3 class="h5 mb-2">{{ partido.equipoLocal.nombre }} vs {{ partido.equipoVisitante.nombre }}</h3>
+                      <p class="mb-1 text-secondary">{{ formatearFecha(partido) }}</p>
+                      <p class="mb-0" *ngIf="partido.arbitro">Arbitro: {{ partido.arbitro.nombreUsuario }}</p>
+                    </div>
+                    <div class="text-lg-end">
+                      <p class="h5 mb-0">{{ partido.puntosLocal }} - {{ partido.puntosVisitante }}</p>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <div class="empty-state" *ngIf="obtenerPartidosJugadosPagina().length === 0">
+                No hay partidos jugados para el filtro seleccionado.
+              </div>
+            </div>
+
+            <div class="calendar-column__footer">
+              <button
+                type="button"
+                class="btn btn-outline-success"
+                [disabled]="!puedeRetrocederJugados()"
+                (click)="cambiarPaginaJugados(-1)">
+                Anterior
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-success"
+                [disabled]="!puedeAvanzarJugados()"
+                (click)="cambiarPaginaJugados(1)">
+                Siguiente
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <div class="col-xl-6">
+          <section class="calendar-column h-100">
+            <div class="calendar-column__header">
+              <div>
+                <h2 class="h5 section-title mb-1">Partidos por jugar</h2>
+                <p class="text-secondary mb-0">{{ obtenerResumenPendientes() }}</p>
+              </div>
+            </div>
+
+            <div class="d-grid gap-3">
+              <!-- Directiva que sirve para recorrer los partidos pendientes de la pagina actual. -->
+              <article
+                class="calendar-match-card calendar-match-card--pending"
+                *ngFor="let partido of obtenerPartidosPendientesPagina()"
+                [routerLink]="['/partidos', partido.idPartido]">
+                <div class="card-body">
+                  <div class="d-flex flex-column flex-lg-row justify-content-between gap-3">
+                    <div>
+                      <h3 class="h5 mb-2">{{ partido.equipoLocal.nombre }} vs {{ partido.equipoVisitante.nombre }}</h3>
+                      <p class="mb-1 text-secondary">{{ formatearFecha(partido) }}</p>
+                      <p class="mb-0" *ngIf="partido.arbitro">Arbitro: {{ partido.arbitro.nombreUsuario }}</p>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <div class="empty-state" *ngIf="obtenerPartidosPendientesPagina().length === 0">
+                No hay partidos pendientes para el filtro seleccionado.
+              </div>
+            </div>
+
+            <div class="calendar-column__footer">
+              <button
+                type="button"
+                class="btn btn-outline-success"
+                [disabled]="!puedeRetrocederPendientes()"
+                (click)="cambiarPaginaPendientes(-1)">
+                Anterior
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-success"
+                [disabled]="!puedeAvanzarPendientes()"
+                (click)="cambiarPaginaPendientes(1)">
+                Siguiente
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -111,7 +111,7 @@ function Start-BackgroundCommand {
     -ArgumentList @('/c', $wrappedCommand) `
     -WorkingDirectory $WorkingDirectory `
     -PassThru `
-    -WindowStyle Minimized
+    -WindowStyle Hidden
 }
 
 function Wait-BackendReady {
@@ -141,12 +141,39 @@ function Wait-BackendReady {
   return $false
 }
 
+function Wait-FrontendReady {
+  param (
+    [Parameter(Mandatory = $true)]
+    [int]$Port,
+
+    [Parameter(Mandatory = $true)]
+    [int]$TimeoutSeconds
+  )
+
+  $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+
+  while ((Get-Date) -lt $deadline) {
+    try {
+      $response = Invoke-WebRequest -UseBasicParsing -Uri "http://127.0.0.1:$Port/" -TimeoutSec 2
+
+      if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 300) {
+        return $true
+      }
+    }
+    catch {
+      Start-Sleep -Milliseconds 500
+    }
+  }
+
+  return $false
+}
+
 if (Test-Path $stateFile) {
   $previousState = Get-Content $stateFile | ConvertFrom-Json
   $backendAlive = Test-ProcessAlive -ProcessId ([int]$previousState.backendPid)
   $frontendAlive = Test-ProcessAlive -ProcessId ([int]$previousState.frontendPid)
 
-  if ($backendAlive -or $frontendAlive) {
+  if ($backendAlive -and $frontendAlive) {
     Write-Host 'El entorno de desarrollo ya esta iniciado.' -ForegroundColor Yellow
     Write-Host "Frontend: $($previousState.frontendUrl)"
     Write-Host 'Backend: http://localhost:1000/'
@@ -154,6 +181,10 @@ if (Test-Path $stateFile) {
     Write-Host "Log frontend: $($previousState.frontendLog)"
     Write-Host 'Si quieres reiniciar los procesos, ejecuta npm run dev:stop y luego npm run dev:full.'
     exit 0
+  }
+
+  if ($frontendAlive) {
+    Stop-ProcessIfRunning -ProcessId ([int]$previousState.frontendPid)
   }
 
   Remove-Item -LiteralPath $stateFile -Force
@@ -197,9 +228,13 @@ else {
 
 # Bloque que sirve para iniciar Angular en segundo plano sobre el puerto disponible.
 $frontendProcess = Start-BackgroundCommand `
-  -Command "npm.cmd start -- --host 0.0.0.0 --port $frontendPort" `
+  -Command "npm.cmd start -- --host 127.0.0.1 --port $frontendPort" `
   -WorkingDirectory $frontendRoot `
   -LogPath $frontendLog
+
+if (-not (Wait-FrontendReady -Port $frontendPort -TimeoutSeconds 45)) {
+  throw "El frontend no ha quedado listo a tiempo en el puerto $frontendPort. Revisa el log: $frontendLog"
+}
 
 $state = [PSCustomObject]@{
   backendPid = $backendPid

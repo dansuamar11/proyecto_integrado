@@ -1,0 +1,48 @@
+<div class="d-flex justify-content-between align-items-center gap-3 mb-4">
+  <div>
+    <h1 class="h3 section-title mb-1">Solicitudes de contacto</h1>
+    <p class="text-secondary mb-0">Mensajes recibidos desde la página pública de contacto.</p>
+  </div>
+  <a class="btn btn-outline-success" routerLink="/gerente/administrar">Volver al panel</a>
+</div>
+
+<div class="alert alert-success" *ngIf="mensajeExito">{{ mensajeExito }}</div>
+<div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+
+<div class="solicitudes-vacio card page-card text-center" *ngIf="!error && solicitudes.length === 0">
+  <div class="card-body p-5">
+    <h2 class="h5 section-title mb-2">No hay solicitudes pendientes</h2>
+    <p class="text-secondary mb-0">Cuando lleguen mensajes desde contacto aparecerán aquí.</p>
+  </div>
+</div>
+
+<div class="solicitudes-grid" *ngIf="solicitudes.length > 0">
+  <article class="card page-card solicitud-card" *ngFor="let solicitud of solicitudes">
+    <div class="card-body p-4 d-flex flex-column gap-3">
+      <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
+        <div>
+          <p class="solicitud-label mb-1">Fecha de llegada</p>
+          <p class="mb-0 fw-semibold">{{ formatearFecha(solicitud.fechaCreacion) }}</p>
+        </div>
+        <button
+          type="button"
+          class="btn btn-outline-danger"
+          [disabled]="eliminandoId === solicitud.idSolicitud"
+          (click)="eliminarSolicitud(solicitud)">
+          {{ eliminandoId === solicitud.idSolicitud ? 'Borrando...' : 'BORRAR' }}
+        </button>
+      </div>
+
+      <div class="solicitud-datos">
+        <p><span class="solicitud-label">Nombre:</span> {{ solicitud.nombreContacto }}</p>
+        <p><span class="solicitud-label">Teléfono:</span> {{ solicitud.telefonoContacto || 'No indicado' }}</p>
+        <p><span class="solicitud-label">Mail:</span> {{ solicitud.correoContacto }}</p>
+      </div>
+
+      <div>
+        <p class="solicitud-label mb-2">Mensaje</p>
+        <p class="solicitud-mensaje mb-0">{{ solicitud.mensaje }}</p>
+      </div>
+    </div>
+  </article>
+</div>

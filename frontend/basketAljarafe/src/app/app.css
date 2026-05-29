@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+.app-loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(15, 61, 46, 0.35);
+  backdrop-filter: blur(2px);
+}
+
+.app-loading-panel {
+  min-width: min(24rem, 100%);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  color: #0f3d2e;
+  background: #ffffff;
+  box-shadow: 0 1rem 2.5rem rgba(15, 61, 46, 0.18);
+}
+
+.app-loading-spinner {
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1rem;
+  color: #0f3d2e;
+}

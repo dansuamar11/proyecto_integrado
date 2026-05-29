@@ -3,6 +3,7 @@ package com.basketAljarafe;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -10,10 +11,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.basketAljarafe.entidad.Equipo;
 import com.basketAljarafe.entidad.Jugador;
+import com.basketAljarafe.entidad.Rol;
+import com.basketAljarafe.entidad.Usuario;
 import com.basketAljarafe.repositorio.JugadorRepositorio;
+import com.basketAljarafe.repositorio.RolRepositorio;
+import com.basketAljarafe.repositorio.UsuarioRepositorio;
 
 @SpringBootApplication
 public class BasketAljarafeApplication {
@@ -59,6 +65,30 @@ public class BasketAljarafeApplication {
 		};
 	}
 
+	@Bean
+	// Metodo que sirve para garantizar los roles base y el usuario administrador inicial.
+	public CommandLineRunner inicializarSeguridadBasica(RolRepositorio rolRepositorio,
+			UsuarioRepositorio usuarioRepositorio,
+			PasswordEncoder passwordEncoder) {
+		return args -> {
+			Map<String, Rol> roles = Map.of(
+					"ADMIN", obtenerOCrearRol(rolRepositorio, "ADMIN"),
+					"GERENTE", obtenerOCrearRol(rolRepositorio, "GERENTE"),
+					"ARBITRO", obtenerOCrearRol(rolRepositorio, "ARBITRO"),
+					"ENTRENADOR", obtenerOCrearRol(rolRepositorio, "ENTRENADOR"));
+
+			if (usuarioRepositorio.findByUsername("admin").isEmpty()) {
+				Usuario administrador = new Usuario();
+				administrador.setNombreUsuario("Administrador General");
+				administrador.setUsername("admin");
+				administrador.setPasswordHash(passwordEncoder.encode("admin123"));
+				administrador.setRol(roles.get("ADMIN"));
+				administrador.setActivo(true);
+				usuarioRepositorio.save(administrador);
+			}
+		};
+	}
+
 	// Metodo que sirve para obtener el siguiente dorsal disponible.
 	private Integer obtenerSiguienteDorsalDisponible(Set<Integer> dorsalesUsados) {
 		return IntStream.rangeClosed(0, 99)
@@ -66,5 +96,11 @@ public class BasketAljarafeApplication {
 				.filter(dorsal -> !dorsalesUsados.contains(dorsal))
 				.findFirst()
 				.orElseThrow(() -> new IllegalStateException("No quedan dorsales disponibles para el equipo"));
+	}
+
+	// Metodo que sirve para crear un rol base cuando aun no existe en la base de datos.
+	private Rol obtenerOCrearRol(RolRepositorio rolRepositorio, String nombreRol) {
+		return rolRepositorio.findByNombreRol(nombreRol)
+				.orElseGet(() -> rolRepositorio.save(new Rol(nombreRol)));
 	}
 }

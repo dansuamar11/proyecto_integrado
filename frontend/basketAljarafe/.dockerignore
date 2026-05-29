@@ -1,0 +1,6 @@
+node_modules
+dist
+.angular
+angular-dev.log
+angular-dev-4201.log
+

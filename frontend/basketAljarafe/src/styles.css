@@ -1,0 +1,117 @@
+/* You can add global styles to this file, and also import other style files */
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: #f5f7f2;
+  color: #1f2937;
+}
+
+a {
+  text-decoration: none;
+}
+
+.app-navbar {
+  background: linear-gradient(135deg, #0f5132 0%, #1f7a4a 100%);
+}
+
+.app-footer {
+  background: #153b2e;
+  color: #ffffff;
+}
+
+.app-btn-primary {
+  background: #ee8f24;
+  border-color: #ee8f24;
+  color: #ffffff;
+}
+
+.app-btn-primary:hover,
+.app-btn-primary:focus {
+  background: #d67d1a;
+  border-color: #d67d1a;
+  color: #ffffff;
+}
+
+.app-btn-secondary {
+  background: #ee8f24;
+  border: 1px solid #ee8f24;
+  color: #ffffff;
+}
+
+.app-btn-secondary:hover,
+.app-btn-secondary:focus {
+  background: #d67d1a;
+  border-color: #d67d1a;
+  color: #ffffff;
+}
+
+.page-card {
+  border: 0;
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(21, 59, 46, 0.08);
+}
+
+.section-title {
+  color: #153b2e;
+}
+
+.hero-band {
+  background: linear-gradient(135deg, rgba(15, 81, 50, 0.95) 0%, rgba(238, 143, 36, 0.92) 100%);
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.table thead th {
+  background: #edf4ef;
+  color: #153b2e;
+  border-bottom-width: 1px;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-pill--pending {
+  background: #fff3cd;
+  color: #7a5a00;
+}
+
+.status-pill--played {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+.panel-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.form-label {
+  font-weight: 600;
+  color: #153b2e;
+}
+
+.empty-state {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.metric-box {
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #dfe7e1;
+  padding: 1rem;
+}

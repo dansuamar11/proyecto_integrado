@@ -1,0 +1,43 @@
+.stats-category-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.stats-category-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid rgba(15, 61, 46, 0.18);
+  border-radius: 0.5rem;
+}
+
+.stats-category-btn {
+  min-width: 9.5rem;
+  padding: 0.5rem 1rem;
+  color: #0f3d2e;
+  border: 0;
+  border-right: 1px solid rgba(15, 61, 46, 0.18);
+  border-radius: 0;
+  background: #f7faf8;
+}
+
+.stats-category-btn:last-child {
+  border-right: 0;
+}
+
+.stats-category-btn:hover {
+  color: #0f3d2e;
+  background: #edf5f0;
+}
+
+.stats-category-btn--active {
+  color: #ffffff;
+  border-color: #0f3d2e;
+  background: #0f3d2e;
+}
+
+.stats-category-btn--active:hover {
+  color: #ffffff;
+  background: #0f3d2e;
+}

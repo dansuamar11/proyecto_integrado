@@ -1,0 +1,37 @@
+.solicitudes-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.solicitud-card {
+  height: 100%;
+}
+
+.solicitud-label {
+  color: var(--app-muted, #5f6f68);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.solicitud-datos {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.solicitud-datos p,
+.solicitud-mensaje {
+  margin: 0;
+}
+
+.solicitud-mensaje {
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.solicitudes-vacio {
+  max-width: 720px;
+  margin: 0 auto;
+}

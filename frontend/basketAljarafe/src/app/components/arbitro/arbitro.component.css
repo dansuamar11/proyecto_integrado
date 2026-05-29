@@ -1,0 +1,31 @@
+.referee-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  height: 100%;
+}
+
+.referee-column__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.referee-match-card {
+  border: 1px solid rgba(15, 61, 46, 0.08);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.35rem 1rem rgba(15, 61, 46, 0.06);
+}
+
+.referee-match-card--played {
+  background: #e8f5ee;
+}
+
+.referee-match-card--pending {
+  background: #fff6dd;
+}
+
+.referee-match-card .btn {
+  flex-shrink: 0;
+}

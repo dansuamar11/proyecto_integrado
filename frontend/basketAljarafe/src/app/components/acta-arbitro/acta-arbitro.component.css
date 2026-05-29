@@ -1,0 +1,46 @@
+.acta-layout {
+  width: min(1440px, calc(100vw - 2rem));
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+.team-sheet {
+  height: 100%;
+  padding: 0.875rem;
+  border: 1px solid rgba(15, 61, 46, 0.08);
+  border-radius: 0.5rem;
+  background: #f8fbf9;
+}
+
+.team-sheet .table {
+  table-layout: fixed;
+}
+
+.team-sheet th,
+.team-sheet td {
+  padding-inline: 0.35rem;
+}
+
+.team-sheet th:first-child,
+.team-sheet td:first-child {
+  width: 32%;
+}
+
+.team-sheet th:nth-child(2),
+.team-sheet td:nth-child(2) {
+  width: 12%;
+}
+
+.team-sheet .form-control {
+  min-width: 0;
+  padding-inline: 0.4rem;
+  text-align: center;
+}
+
+@media (max-width: 1199.98px) {
+  .acta-layout {
+    width: 100%;
+    margin-left: 0;
+    transform: none;
+  }
+}

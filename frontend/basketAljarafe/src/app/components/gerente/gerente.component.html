@@ -1,0 +1,303 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 section-title mb-1">Administrar liga</h1>
+    <p class="text-secondary mb-0">Alta de {{ obtenerEtiquetaGestion() }}, equipos y cambios de entrenador.</p>
+  </div>
+  <div class="d-flex gap-2 flex-wrap">
+    <button type="button" class="btn btn-success" (click)="abrirModalGenerarPartido()">Generar partido</button>
+    <button type="button" class="btn btn-outline-success" (click)="abrirModalPassword()">Cambiar contraseña</button>
+    <a class="btn app-btn-primary position-relative" routerLink="/gerente/solicitudes-contacto">
+      Solicitudes de contacto
+      <span class="solicitudes-badge" *ngIf="totalSolicitudesContacto > 0">
+        {{ totalSolicitudesContacto > 99 ? '99+' : totalSolicitudesContacto }}
+      </span>
+    </a>
+  </div>
+</div>
+
+<div class="alert alert-success" *ngIf="mensajeExito">{{ mensajeExito }}</div>
+<div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+<div class="alert alert-danger" *ngIf="errorCarga">{{ errorCarga }}</div>
+
+<div class="panel-grid" *ngIf="!errorCarga">
+  <section class="card page-card">
+    <div class="card-body p-4 d-flex flex-column">
+      <h2 class="h5 section-title mb-3">Alta de {{ obtenerEtiquetaGestion() }}</h2>
+      <form [formGroup]="formularioUsuario" (ngSubmit)="crearUsuario()" class="d-grid gap-3">
+        <div>
+          <label class="form-label" for="nombreUsuario">Nombre completo</label>
+          <input id="nombreUsuario" class="form-control" type="text" formControlName="nombreUsuario">
+        </div>
+        <div>
+          <label class="form-label" for="usernameUsuario">Username</label>
+          <input id="usernameUsuario" class="form-control" type="text" formControlName="username">
+        </div>
+        <div>
+          <label class="form-label" for="passwordUsuario">Contraseña</label>
+          <input id="passwordUsuario" class="form-control" type="password" formControlName="password">
+        </div>
+        <div>
+          <label class="form-label" for="rolUsuario">Rol</label>
+          <select id="rolUsuario" class="form-select" formControlName="nombreRol">
+            <option value="ARBITRO">ARBITRO</option>
+            <option value="ENTRENADOR">ENTRENADOR</option>
+            <option value="GERENTE" *ngIf="esAdmin()">GERENTE</option>
+            <option value="ADMIN" *ngIf="esAdmin()">ADMIN</option>
+          </select>
+        </div>
+        <div class="mt-auto">
+          <button type="submit" class="btn app-btn-primary w-100" [disabled]="cargando">Crear {{ obtenerEtiquetaAlta() }}</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="card page-card">
+    <div class="card-body p-4 d-flex flex-column">
+      <h2 class="h5 section-title mb-3">Alta de equipos</h2>
+      <form [formGroup]="formularioEquipo" (ngSubmit)="crearEquipo()" class="d-grid gap-3">
+        <div>
+          <label class="form-label" for="nombreEquipo">Nombre del equipo</label>
+          <input id="nombreEquipo" class="form-control" type="text" formControlName="nombre">
+        </div>
+        <div>
+          <label class="form-label" for="entrenadorEquipo">Entrenador</label>
+          <select id="entrenadorEquipo" class="form-select" formControlName="idEntrenador">
+            <option [ngValue]="null">Selecciona entrenador</option>
+            <option *ngFor="let entrenador of entrenadores" [ngValue]="entrenador.idUsuario">
+              {{ entrenador.nombreUsuario }}
+            </option>
+          </select>
+        </div>
+        <div class="mt-auto">
+          <button type="submit" class="btn app-btn-primary w-100">Crear equipo</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="card page-card">
+    <div class="card-body p-4 d-flex flex-column">
+      <h2 class="h5 section-title mb-3">Cambiar entrenador de equipo</h2>
+      <form [formGroup]="formularioCambioEntrenador" (ngSubmit)="cambiarEntrenador()" class="d-grid gap-3">
+        <div>
+          <label class="form-label" for="equipoCambio">Equipo</label>
+          <select id="equipoCambio" class="form-select" formControlName="idEquipo">
+            <option [ngValue]="null">Selecciona equipo</option>
+            <option *ngFor="let equipo of equipos" [ngValue]="equipo.idEquipo">
+              {{ equipo.nombre }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label" for="entrenadorCambio">Nuevo entrenador</label>
+          <select id="entrenadorCambio" class="form-select" formControlName="idEntrenador">
+            <option [ngValue]="null">Selecciona entrenador</option>
+            <option *ngFor="let entrenador of entrenadores" [ngValue]="entrenador.idUsuario">
+              {{ entrenador.nombreUsuario }}
+            </option>
+          </select>
+        </div>
+        <div class="mt-auto">
+          <button type="submit" class="btn app-btn-primary w-100">Cambiar entrenador</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="card page-card">
+    <div class="card-body p-4 d-flex flex-column">
+      <h2 class="h5 section-title mb-3">Asignar partidos a árbitros</h2>
+      <form [formGroup]="formularioAsignacionArbitro" (ngSubmit)="asignarArbitroAPartido()" class="d-grid gap-3">
+        <div>
+          <label class="form-label" for="arbitroAsignacion">Árbitro</label>
+          <select id="arbitroAsignacion" class="form-select" formControlName="idArbitro">
+            <option [ngValue]="null">Selecciona árbitro</option>
+            <option *ngFor="let arbitro of arbitros" [ngValue]="arbitro.idUsuario">
+              {{ arbitro.nombreUsuario }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label" for="partidoAsignacion">Partido pendiente</label>
+          <select id="partidoAsignacion" class="form-select" formControlName="idPartido">
+            <option [ngValue]="null">Selecciona partido</option>
+            <option *ngFor="let partido of partidosPendientes" [ngValue]="partido.idPartido">
+              {{ obtenerEtiquetaPartidoSinArbitro(partido) }}
+            </option>
+          </select>
+        </div>
+        <div class="mt-auto">
+          <button type="submit" class="btn app-btn-primary w-100">Guardar árbitro</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="card page-card">
+    <div class="card-body p-4 d-flex flex-column">
+      <h2 class="h5 section-title mb-3">{{ esAdmin() ? 'Usuarios registrados' : 'Árbitros/entrenadores registrados' }}</h2>
+      <div class="row g-3 align-items-end mb-3">
+        <div class="col-md-6">
+          <label class="form-label" for="filtroRolUsuarios">Filtrar por rol</label>
+          <select
+            id="filtroRolUsuarios"
+            class="form-select"
+            [value]="filtroRolUsuarios"
+            (change)="actualizarFiltroRolUsuarios($event)">
+            <option value="">Todos los roles</option>
+            <option *ngFor="let rol of obtenerRolesFiltroUsuarios()" [value]="rol">{{ rol }}</option>
+          </select>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <p class="text-secondary mb-0">{{ obtenerResumenUsuarios() }}</p>
+        </div>
+      </div>
+
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item px-0 d-flex justify-content-between align-items-center gap-3" *ngFor="let usuario of obtenerUsuariosPaginados()">
+          <div>
+            <div>{{ usuario.nombreUsuario }} - {{ usuario.rol.nombreRol }}</div>
+            <div class="small text-secondary">{{ usuario.username }}</div>
+            <span class="text-secondary" *ngIf="!usuario.activo">(Desactivado)</span>
+          </div>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-danger"
+            *ngIf="usuario.activo && puedeCambiarEstadoUsuario(usuario)"
+            (click)="desactivarUsuario(usuario.idUsuario)">
+            Desactivar
+          </button>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-success"
+            *ngIf="!usuario.activo && puedeCambiarEstadoUsuario(usuario)"
+            (click)="activarUsuario(usuario.idUsuario)">
+            Reactivar
+          </button>
+        </li>
+      </ul>
+
+      <div class="d-flex justify-content-between gap-2 mt-auto">
+        <button
+          type="button"
+          class="btn btn-outline-success"
+          [disabled]="!puedeRetrocederUsuarios()"
+          (click)="cambiarPaginaUsuarios(-1)">
+          Anterior
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-success"
+          [disabled]="!puedeAvanzarUsuarios()"
+          (click)="cambiarPaginaUsuarios(1)">
+          Siguiente
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card page-card">
+    <div class="card-body p-4 d-flex flex-column h-100">
+      <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
+        <h2 class="h5 section-title mb-0">Equipos registrados</h2>
+        <p class="text-secondary mb-0">{{ obtenerResumenEquipos() }}</p>
+      </div>
+
+      <ul class="list-group list-group-flush equipos-lista">
+        <li class="list-group-item px-0 equipos-lista__item" *ngFor="let equipo of obtenerEquiposPaginados()">
+          {{ equipo.nombre }} - {{ equipo.entrenador?.nombreUsuario || 'Sin entrenador' }}
+        </li>
+      </ul>
+
+      <div class="d-flex justify-content-between gap-2 mt-auto" *ngIf="equipos.length > 6">
+        <button
+          type="button"
+          class="btn btn-outline-success"
+          [disabled]="!puedeRetrocederEquipos()"
+          (click)="cambiarPaginaEquipos(-1)">
+          Anterior
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-success"
+          [disabled]="!puedeAvanzarEquipos()"
+          (click)="cambiarPaginaEquipos(1)">
+          Siguiente
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="modal-backdrop-custom" *ngIf="mostrandoModalPartido" (click)="cerrarModalPartido()">
+</div>
+<div class="modal-custom" *ngIf="mostrandoModalPartido">
+  <div class="modal-floating-alert alert alert-danger" *ngIf="modalPartidoError">
+    <div class="modal-floating-alert__content">
+      <span>{{ modalPartidoError }}</span>
+      <button type="button" class="modal-floating-alert__close" (click)="cerrarErrorModalPartido()" aria-label="Cerrar aviso">
+        x
+      </button>
+    </div>
+  </div>
+  <div class="modal-custom__content" (click)="$event.stopPropagation()">
+    <div class="modal-custom__header">
+      <h2 class="h5 section-title mb-0">Generar nuevo partido</h2>
+      <button type="button" class="modal-custom__close" (click)="cerrarModalPartido()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <form [formGroup]="formularioPartido" (ngSubmit)="generarPartido()" class="d-grid gap-3">
+      <div>
+        <label class="form-label" for="equipoLocal">Equipo local</label>
+        <select id="equipoLocal" class="form-select" formControlName="idEquipoLocal">
+          <option [ngValue]="null">Selecciona equipo local</option>
+          <option *ngFor="let equipo of equipos" [ngValue]="equipo.idEquipo">
+            {{ equipo.nombre }}
+          </option>
+        </select>
+      </div>
+      <div>
+        <label class="form-label" for="equipoVisitante">Equipo visitante</label>
+        <select id="equipoVisitante" class="form-select" formControlName="idEquipoVisitante">
+          <option [ngValue]="null">Selecciona equipo visitante</option>
+          <option *ngFor="let equipo of equiposDisponiblesModal" [ngValue]="equipo.idEquipo">
+            {{ equipo.nombre }}
+          </option>
+        </select>
+      </div>
+      <div>
+        <label class="form-label" for="arbitroPartido">Árbitro</label>
+        <select id="arbitroPartido" class="form-select" formControlName="idArbitro">
+          <option [ngValue]="null">Sin árbitro</option>
+          <option *ngFor="let arbitro of arbitros" [ngValue]="arbitro.idUsuario">
+            {{ arbitro.nombreUsuario }}
+          </option>
+        </select>
+      </div>
+      <div class="row g-3">
+        <div class="col-sm-8">
+          <label class="form-label" for="fechaPartido">Fecha</label>
+          <input id="fechaPartido" class="form-control" type="date" formControlName="fecha" [min]="fechaMinimaFormateada">
+        </div>
+        <div class="col-sm-4">
+          <label class="form-label" for="horaPartido">Hora</label>
+          <select id="horaPartido" class="form-select" formControlName="hora">
+            <option *ngFor="let hora of horasPartidoDisponibles" [value]="hora">{{ hora }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="d-grid gap-2">
+        <button type="submit" class="btn app-btn-primary w-100" [disabled]="cargando">Generar partido</button>
+        <button type="button" class="btn btn-outline-secondary w-100" (click)="cerrarModalPartido()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<app-password-change-modal
+  *ngIf="mostrandoModalPassword"
+  (cerrado)="cerrarModalPassword()"
+  (passwordCambiada)="confirmarCambioPassword($event)">
+</app-password-change-modal>

@@ -1,0 +1,68 @@
+<div class="app-shell d-flex flex-column min-vh-100">
+  <!-- Directiva que sirve para mostrar una capa de espera global mientras el router resuelve la pagina. -->
+  <div class="app-loading-overlay" *ngIf="navegacionCargando()">
+    <div class="app-loading-panel text-center">
+      <div class="spinner-border app-loading-spinner" role="status" aria-hidden="true"></div>
+      <p class="mb-0 fw-semibold">Cargando datos de la pagina...</p>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark app-navbar shadow-sm">
+    <div class="container">
+      <!-- Enlace que sirve para volver a la pagina principal mediante el router de Angular. -->
+      <a class="navbar-brand fw-semibold" routerLink="/inicio">Basket Aljarafe</a>
+
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#menuPrincipal"
+        aria-controls="menuPrincipal"
+        aria-expanded="false"
+        aria-label="Mostrar navegacion">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div id="menuPrincipal" class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <!-- Directiva que sirve para recorrer los enlaces publicos del menu. -->
+          <li class="nav-item" *ngFor="let enlace of enlacesPublicos">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="enlace.ruta">
+              {{ enlace.etiqueta }}
+            </a>
+          </li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-3 text-white">
+          <!-- Directiva que sirve para mostrar el nombre del usuario autenticado. -->
+          <span class="small text-white-50" *ngIf="sesion().autenticado">
+            {{ sesion().username }}
+          </span>
+
+          <!-- Directiva que sirve para alternar entre login y acciones de sesion. -->
+          <ng-container *ngIf="sesion().autenticado; else accesoPublico">
+            <a class="btn btn-sm btn-outline-light" *ngIf="tienePanelPrivado()" [routerLink]="rutaPanel()">{{ etiquetaPanel() }}</a>
+            <button type="button" class="btn btn-sm app-btn-secondary" (click)="cerrarSesion()">Cerrar sesión</button>
+          </ng-container>
+
+          <ng-template #accesoPublico>
+            <a class="btn btn-sm app-btn-secondary" routerLink="/login">Iniciar sesión</a>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-grow-1 py-4">
+    <div class="container">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <footer class="app-footer py-4 mt-auto">
+    <div class="container d-flex flex-column flex-md-row justify-content-between gap-2">
+      <span class="fw-semibold">Liga de baloncest local del Aljarafe</span>
+      <span class="text-white-50">Daniel Suárez Martín</span>
+    </div>
+  </footer>
+</div>

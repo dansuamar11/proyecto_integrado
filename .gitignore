@@ -32,6 +32,21 @@ build/
 ### VS Code ###
 .vscode/
 
+### Frontend artifacts ###
+frontend/basketAljarafe/node_modules/
+frontend/basketAljarafe/dist/
+frontend/basketAljarafe/.angular/
+frontend/basketAljarafe/angular-dev*.log
+
 ### Docker MySQL ###
 docker/mysql/data/*
 !docker/mysql/data/.gitkeep
+
+### Local logs ###
+logs/
+*.log
+
+### Local documentation and IA traces ###
+*.docx
+scripts/update_documentacion_basket.py
+scripts/update_memoria_basket_doc.py
