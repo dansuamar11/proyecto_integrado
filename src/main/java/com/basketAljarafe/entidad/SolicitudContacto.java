@@ -23,10 +23,10 @@ public class SolicitudContacto {
 	@Column(name = "id_solicitud")
 	private Integer idSolicitud;
 
-	@Column(name = "nombre_contacto", nullable = false, length = 100)
+	@Column(name = "nombre_contacto", length = 100)
 	private String nombreContacto;
 
-	@Column(name = "correo_contacto", nullable = false, length = 150)
+	@Column(name = "correo_contacto", length = 150)
 	private String correoContacto;
 
 	@Column(name = "telefono_contacto", length = 25)

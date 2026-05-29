@@ -33,14 +33,14 @@ public class ServicioEntrenador {
 	public Equipo obtenerEquipoDelEntrenador(String username) {
 		Usuario entrenador = usuarioRepositorio.findByUsername(username)
 				.orElseThrow(() -> new IllegalArgumentException("No existe el usuario indicado"));
-		return equipoRepositorio.findByEntrenador(entrenador)
-				.orElseThrow(() -> new IllegalArgumentException("El entrenador no tiene equipo asignado"));
+		return equipoRepositorio.findByEntrenador(entrenador).orElse(null);
 	}
 
 	@Transactional(readOnly = true)
 	// Metodo que sirve para obtener los jugadores del equipo del entrenador.
 	public List<Jugador> obtenerJugadoresDelEntrenador(String username) {
-		return jugadorRepositorio.findByEquipoOrderByApellidosAscNombreAsc(obtenerEquipoDelEntrenador(username));
+		Equipo equipo = obtenerEquipoDelEntrenador(username);
+		return equipo == null ? List.of() : jugadorRepositorio.findByEquipoOrderByApellidosAscNombreAsc(equipo);
 	}
 
 	@Transactional

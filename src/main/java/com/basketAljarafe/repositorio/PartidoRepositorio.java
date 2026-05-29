@@ -22,4 +22,7 @@ public interface PartidoRepositorio extends JpaRepository<Partido, Integer> {
 
 	// Metodo que sirve para obtener los partidos filtrados por estado.
 	List<Partido> findByEstadoOrderByFechaAsc(EstadoPartido estado);
+
+	// Metodo que sirve para obtener los partidos pendientes que aun no tienen arbitro asignado.
+	List<Partido> findByEstadoAndArbitroIsNullOrderByFechaAsc(EstadoPartido estado);
 }

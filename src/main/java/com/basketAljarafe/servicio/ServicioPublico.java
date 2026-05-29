@@ -6,9 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.basketAljarafe.dto.ClasificacionEquipoDto;
 import com.basketAljarafe.dto.ActaPartidoDto;
@@ -134,14 +137,9 @@ public class ServicioPublico {
 		actaPartidoDto.setNombreEquipoVisitante(partido.getEquipoVisitante().getNombre());
 		actaPartidoDto.setPuntosLocal(partido.getPuntosLocal());
 		actaPartidoDto.setPuntosVisitante(partido.getPuntosVisitante());
-		actaPartidoDto.setEstadisticasJugadores(
-				partido.getEquipoLocal().getJugadores().stream()
-						.map(jugador -> construirEstadisticaJugador(partido, jugador))
-						.collect(Collectors.toCollection(ArrayList::new)));
-		actaPartidoDto.getEstadisticasJugadores().addAll(
-				partido.getEquipoVisitante().getJugadores().stream()
-						.map(jugador -> construirEstadisticaJugador(partido, jugador))
-						.toList());
+		actaPartidoDto.setEstadisticasJugadores(obtenerJugadoresVisibles(partido).stream()
+				.map(jugador -> construirEstadisticaJugador(partido, jugador))
+				.collect(Collectors.toCollection(ArrayList::new)));
 		return actaPartidoDto;
 	}
 
@@ -179,12 +177,35 @@ public class ServicioPublico {
 	@Transactional
 	// Metodo que sirve para registrar una solicitud de contacto para la liga.
 	public SolicitudContacto registrarSolicitudContacto(FormularioContactoDto formularioContactoDto) {
+		String correoContacto = normalizarTexto(formularioContactoDto.getCorreoContacto());
+		String telefonoContacto = normalizarTexto(formularioContactoDto.getTelefonoContacto());
+		String mensaje = normalizarTexto(formularioContactoDto.getMensaje());
+
+		if (mensaje == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El mensaje es obligatorio.");
+		}
+
+		if (correoContacto == null && telefonoContacto == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Debes indicar al menos un correo electronico o un telefono.");
+		}
+
 		SolicitudContacto solicitudContacto = new SolicitudContacto();
-		solicitudContacto.setNombreContacto(formularioContactoDto.getNombreContacto());
-		solicitudContacto.setCorreoContacto(formularioContactoDto.getCorreoContacto());
-		solicitudContacto.setTelefonoContacto(formularioContactoDto.getTelefonoContacto());
-		solicitudContacto.setMensaje(formularioContactoDto.getMensaje());
+		solicitudContacto.setNombreContacto(normalizarTexto(formularioContactoDto.getNombreContacto()));
+		solicitudContacto.setCorreoContacto(correoContacto);
+		solicitudContacto.setTelefonoContacto(telefonoContacto);
+		solicitudContacto.setMensaje(mensaje);
 		return solicitudContactoRepositorio.save(solicitudContacto);
+	}
+
+	// Metodo que sirve para normalizar los textos de entrada y convertir cadenas vacias en null.
+	private String normalizarTexto(String texto) {
+		if (texto == null) {
+			return null;
+		}
+
+		String textoNormalizado = texto.trim();
+		return textoNormalizado.isEmpty() ? null : textoNormalizado;
 	}
 
 	// Metodo que sirve para construir la fila de estadisticas visible de un jugador en un partido.
@@ -204,6 +225,24 @@ public class ServicioPublico {
 		});
 
 		return estadisticaJugadorPartidoDto;
+	}
+
+	// Metodo que sirve para devolver los jugadores visibles segun el estado del partido.
+	private List<Jugador> obtenerJugadoresVisibles(Partido partido) {
+		if (partido.getEstado() == EstadoPartido.JUGADO) {
+			return estadisticaPartidoRepositorio.findByPartidoIdPartido(partido.getIdPartido()).stream()
+					.map(EstadisticaPartido::getJugador)
+					.distinct()
+					.sorted(Comparator.comparingInt(jugador -> jugador.getDorsal() == null ? 0 : jugador.getDorsal()))
+					.toList();
+		}
+
+		return Stream.concat(
+				partido.getEquipoLocal().getJugadores().stream(),
+				partido.getEquipoVisitante().getJugadores().stream())
+				.filter(Jugador::isActivo)
+				.sorted(Comparator.comparingInt(jugador -> jugador.getDorsal() == null ? 0 : jugador.getDorsal()))
+				.toList();
 	}
 
 	private static class ResumenEquipo {

@@ -191,7 +191,7 @@ else {
   $backendPid = $backendProcess.Id
 
   if (-not (Wait-BackendReady -Port 1000 -TimeoutSeconds 45)) {
-    throw 'El backend no ha quedado listo a tiempo en el puerto 1000.'
+    throw "El backend no ha quedado listo a tiempo en el puerto 1000. Revisa el log: $backendLog"
   }
 }
 

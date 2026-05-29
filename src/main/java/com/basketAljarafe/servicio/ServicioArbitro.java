@@ -2,6 +2,7 @@ package com.basketAljarafe.servicio;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,14 +54,9 @@ public class ServicioArbitro {
 		actaPartidoDto.setNombreEquipoVisitante(partido.getEquipoVisitante().getNombre());
 		actaPartidoDto.setPuntosLocal(partido.getPuntosLocal());
 		actaPartidoDto.setPuntosVisitante(partido.getPuntosVisitante());
-		actaPartidoDto.setEstadisticasJugadores(
-				partido.getEquipoLocal().getJugadores().stream()
-						.map(jugador -> construirEstadisticaJugador(partido, jugador))
-						.collect(Collectors.toList()));
-		actaPartidoDto.getEstadisticasJugadores().addAll(
-				partido.getEquipoVisitante().getJugadores().stream()
-						.map(jugador -> construirEstadisticaJugador(partido, jugador))
-						.toList());
+		actaPartidoDto.setEstadisticasJugadores(obtenerJugadoresVisibles(partido).stream()
+				.map(jugador -> construirEstadisticaJugador(partido, jugador))
+				.collect(Collectors.toList()));
 		return actaPartidoDto;
 	}
 
@@ -74,6 +70,7 @@ public class ServicioArbitro {
 		for (EstadisticaJugadorPartidoDto estadisticaDto : actaPartidoDto.getEstadisticasJugadores()) {
 			Jugador jugador = jugadorRepositorio.findById(estadisticaDto.getIdJugador())
 					.orElseThrow(() -> new IllegalArgumentException("No existe el jugador indicado"));
+			validarJugadorPermitidoEnActa(partido, jugador);
 
 			EstadisticaPartido estadisticaPartido = estadisticaPartidoRepositorio.findByJugadorAndPartido(jugador, partido)
 					.orElse(new EstadisticaPartido());
@@ -132,6 +129,41 @@ public class ServicioArbitro {
 		});
 
 		return estadisticaJugadorPartidoDto;
+	}
+
+	// Metodo que sirve para devolver los jugadores visibles segun el estado del partido.
+	private List<Jugador> obtenerJugadoresVisibles(Partido partido) {
+		if (partido.getEstado() == EstadoPartido.JUGADO) {
+			return estadisticaPartidoRepositorio.findByPartidoIdPartido(partido.getIdPartido()).stream()
+					.map(EstadisticaPartido::getJugador)
+					.distinct()
+					.sorted((jugadorA, jugadorB) -> Integer.compare(valorSeguro(jugadorA.getDorsal()),
+							valorSeguro(jugadorB.getDorsal())))
+					.toList();
+		}
+
+		return Stream.concat(
+				partido.getEquipoLocal().getJugadores().stream(),
+				partido.getEquipoVisitante().getJugadores().stream())
+				.filter(Jugador::isActivo)
+				.sorted((jugadorA, jugadorB) -> Integer.compare(valorSeguro(jugadorA.getDorsal()),
+						valorSeguro(jugadorB.getDorsal())))
+				.toList();
+	}
+
+	// Metodo que sirve para validar si un jugador puede formar parte del acta del partido.
+	private void validarJugadorPermitidoEnActa(Partido partido, Jugador jugador) {
+		boolean perteneceAlPartido = jugador.getEquipo().getIdEquipo().equals(partido.getEquipoLocal().getIdEquipo())
+				|| jugador.getEquipo().getIdEquipo().equals(partido.getEquipoVisitante().getIdEquipo());
+
+		if (!perteneceAlPartido) {
+			throw new IllegalArgumentException("El jugador no pertenece a ninguno de los equipos del partido");
+		}
+
+		boolean yaTeniaEstadisticas = estadisticaPartidoRepositorio.findByJugadorAndPartido(jugador, partido).isPresent();
+		if (!jugador.isActivo() && !yaTeniaEstadisticas) {
+			throw new IllegalArgumentException("El jugador indicado no puede anadirse al acta de este partido");
+		}
 	}
 
 	// Metodo que sirve para evitar valores nulos en los datos numericos del acta.

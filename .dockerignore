@@ -1,0 +1,14 @@
+.git
+.gitignore
+.idea
+.settings
+.vscode
+target
+logs
+HELP.md
+compose.yaml
+frontend/basketAljarafe/node_modules
+frontend/basketAljarafe/dist
+frontend/basketAljarafe/.angular
+docker/mysql/data
+
