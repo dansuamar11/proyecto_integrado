@@ -232,15 +232,15 @@
 
 <div class="modal-backdrop-custom" *ngIf="mostrandoModalPartido" (click)="cerrarModalPartido()">
 </div>
-<div class="modal-custom" *ngIf="mostrandoModalPartido">
-  <div class="modal-floating-alert alert alert-danger" *ngIf="modalPartidoError">
-    <div class="modal-floating-alert__content">
-      <span>{{ modalPartidoError }}</span>
-      <button type="button" class="modal-floating-alert__close" (click)="cerrarErrorModalPartido()" aria-label="Cerrar aviso">
-        x
-      </button>
-    </div>
+<div class="modal-floating-alert-fixed" *ngIf="mostrandoModalPartido && modalPartidoError">
+  <div class="modal-floating-alert__content">
+    <span>{{ modalPartidoError }}</span>
+    <button type="button" class="modal-floating-alert__close" (click)="cerrarErrorModalPartido()" aria-label="Cerrar aviso">
+      x
+    </button>
   </div>
+</div>
+<div class="modal-custom" *ngIf="mostrandoModalPartido">
   <div class="modal-custom__content" (click)="$event.stopPropagation()">
     <div class="modal-custom__header">
       <h2 class="h5 section-title mb-0">Generar nuevo partido</h2>
