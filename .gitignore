@@ -45,8 +45,3 @@ docker/mysql/data/*
 ### Local logs ###
 logs/
 *.log
-
-### Local documentation and IA traces ###
-*.docx
-scripts/update_documentacion_basket.py
-scripts/update_memoria_basket_doc.py

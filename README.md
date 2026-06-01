@@ -81,6 +81,3 @@ Backend:
 
 ## Observaciones
 
-- El repositorio contiene restos de una capa Thymeleaf antigua, pero la interfaz actual principal está en Angular.
-- La seguridad de rutas privadas se resuelve tanto en frontend como en backend.
-- La funcionalidad de “cerrar partido” como bloqueo explícito todavía no está implementada; el estado actual diferencia entre partidos `PENDIENTE` y `JUGADO`.
