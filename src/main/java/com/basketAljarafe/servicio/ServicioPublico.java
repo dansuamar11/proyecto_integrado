@@ -102,11 +102,12 @@ public class ServicioPublico {
 		}
 
 		List<ResumenEquipo> clasificacionOrdenada = new ArrayList<>(resumenes.values());
-		clasificacionOrdenada.sort(Comparator
-				.comparingInt(ResumenEquipo::getPartidosGanados).reversed()
-				.thenComparingInt(ResumenEquipo::getDiferenciaPuntos).reversed()
-				.thenComparingInt(ResumenEquipo::getPuntosFavor).reversed()
-				.thenComparing(resumen -> resumen.equipo.getNombre()));
+			clasificacionOrdenada.sort(
+			Comparator.comparingInt(ResumenEquipo::getPartidosGanados).reversed()
+				.thenComparing(Comparator.comparingInt(ResumenEquipo::getDiferenciaPuntos).reversed())
+				.thenComparing(Comparator.comparingInt(ResumenEquipo::getPuntosFavor).reversed())
+				.thenComparing(resumen -> resumen.equipo.getNombre())
+			);
 
 		List<ClasificacionEquipoDto> resultado = new ArrayList<>();
 		int posicion = 1;

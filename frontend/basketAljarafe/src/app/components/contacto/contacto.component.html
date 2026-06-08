@@ -17,14 +17,14 @@
         <label class="form-label" for="correoContacto">Correo electrónico</label>
         <input
           id="correoContacto"
-          type="email"
+          type="text"
           class="form-control"
-          [class.is-invalid]="mostrarErrorCampo('correoContacto') || mostrarErrorContactoMinimo()"
+          [class.is-invalid]="mostrarErrorCorreo() || (envioIntentado && mostrarErrorContactoMinimo())"
           formControlName="correoContacto">
-        <div class="invalid-feedback" *ngIf="formularioContacto.get('correoContacto')?.hasError('email')">
+        <div class="invalid-feedback" *ngIf="mostrarErrorCorreo() && formularioContacto.get('correoContacto')?.hasError('correoInvalido')">
           Introduce un correo electrónico válido.
         </div>
-        <div class="invalid-feedback" *ngIf="!formularioContacto.get('correoContacto')?.hasError('email') && mostrarErrorContactoMinimo()">
+        <div class="invalid-feedback" *ngIf="envioIntentado && mostrarErrorContactoMinimo()">
           Debes indicar al menos un correo o un teléfono.
         </div>
       </div>
@@ -35,9 +35,11 @@
           id="telefonoContacto"
           type="text"
           class="form-control"
-          [class.is-invalid]="mostrarErrorContactoMinimo()"
+          [class.is-invalid]="mostrarErrorTelefono() || (envioIntentado && mostrarErrorContactoMinimo())"
           formControlName="telefonoContacto">
-        <div class="invalid-feedback">Debes indicar al menos un correo o un teléfono.</div>
+        <div class="invalid-feedback" *ngIf="mostrarErrorTelefono() && formularioContacto.get('telefonoContacto')?.hasError('telefonoInvalido')">
+          El teléfono debe tener exactamente 9 números.
+        </div>
       </div>
 
       <div class="col-12">
@@ -46,9 +48,11 @@
           id="mensaje"
           rows="5"
           class="form-control"
-          [class.is-invalid]="mostrarErrorCampo('mensaje')"
+          [class.is-invalid]="mostrarErrorMensaje()"
           formControlName="mensaje"></textarea>
-        <div class="invalid-feedback">El mensaje es obligatorio.</div>
+        <div class="invalid-feedback" *ngIf="envioIntentado && formularioContacto.get('mensaje')?.hasError('required')">
+          El mensaje es obligatorio.
+        </div>
       </div>
 
       <div class="col-12">

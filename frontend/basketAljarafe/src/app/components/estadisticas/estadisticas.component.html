@@ -21,7 +21,14 @@
       </div>
 
       <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
+        <table class="table table-hover align-middle mb-0 stats-table">
+          <colgroup>
+            <col class="stats-col-posicion">
+            <col class="stats-col-jugador">
+            <col class="stats-col-dorsal">
+            <col class="stats-col-equipo">
+            <col class="stats-col-valor">
+          </colgroup>
           <thead>
             <tr>
               <th>#</th>
@@ -36,7 +43,7 @@
             <tr *ngFor="let estadistica of obtenerTopJugadores(); let indice = index">
               <td>{{ indice + 1 }}</td>
               <td>{{ estadistica.nombreJugador }}</td>
-              <td>{{ formatearDorsal(estadistica.dorsal) }}</td>
+              <td class="stats-col-dorsal-cell">{{ formatearDorsal(estadistica.dorsal) }}</td>
               <td>{{ estadistica.nombreEquipo }}</td>
               <td>{{ obtenerValorCategoria(estadistica) }}</td>
             </tr>

@@ -131,7 +131,7 @@ export class GerenteComponent {
   protected readonly formularioPartido = this.formBuilder.group({
     idEquipoLocal: [null as number | null, Validators.required],
     idEquipoVisitante: [null as number | null, Validators.required],
-    idArbitro: [null as number | null],
+    idArbitro: [null as number | null, Validators.required],
     fecha: ['', Validators.required],
     hora: ['12:00', Validators.required]
   });

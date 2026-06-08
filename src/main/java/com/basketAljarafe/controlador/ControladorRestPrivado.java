@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.basketAljarafe.dto.ActaPartidoDto;
 import com.basketAljarafe.dto.FormularioAsignacionArbitroDto;
 import com.basketAljarafe.dto.FormularioCambioEntrenadorDto;
+import com.basketAljarafe.dto.FormularioCambioPasswordDto;
 import com.basketAljarafe.dto.FormularioEquipoDto;
 import com.basketAljarafe.dto.FormularioGenerarPartidoDto;
 import com.basketAljarafe.dto.FormularioJugadorDto;
@@ -31,11 +32,13 @@ import com.basketAljarafe.entidad.Partido;
 import com.basketAljarafe.entidad.SolicitudContacto;
 import com.basketAljarafe.entidad.Usuario;
 import com.basketAljarafe.servicio.ServicioArbitro;
+import com.basketAljarafe.servicio.ServicioCuenta;
 import com.basketAljarafe.servicio.ServicioEntrenador;
 import com.basketAljarafe.servicio.ServicioGerente;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import com.basketAljarafe.servicio.ServicioCuenta;
 
 @RestController
 @RequestMapping("/api")
@@ -44,13 +47,15 @@ public class ControladorRestPrivado {
 	private final ServicioGerente servicioGerente;
 	private final ServicioEntrenador servicioEntrenador;
 	private final ServicioArbitro servicioArbitro;
+	private final ServicioCuenta servicioCuenta;
 
 	// Metodo que sirve para crear el controlador REST privado.
 	public ControladorRestPrivado(ServicioGerente servicioGerente, ServicioEntrenador servicioEntrenador,
-			ServicioArbitro servicioArbitro) {
-		this.servicioGerente = servicioGerente;
-		this.servicioEntrenador = servicioEntrenador;
-		this.servicioArbitro = servicioArbitro;
+        ServicioArbitro servicioArbitro, ServicioCuenta servicioCuenta) {
+    this.servicioGerente = servicioGerente;
+    this.servicioEntrenador = servicioEntrenador;
+    this.servicioArbitro = servicioArbitro;
+    this.servicioCuenta = servicioCuenta;
 	}
 
 	@GetMapping("/auth/me")
@@ -66,6 +71,12 @@ public class ControladorRestPrivado {
 		httpServletRequest.login(formularioLoginDto.getUsername(), formularioLoginDto.getPassword());
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return construirRespuestaSesion(authentication, httpServletRequest.getUserPrincipal());
+	}
+
+	@PostMapping("/auth/cambiar-password")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void cambiarPassword(@RequestBody FormularioCambioPasswordDto formularioCambioPasswordDto, Principal principal) {
+		servicioCuenta.cambiarPassword(principal.getName(), formularioCambioPasswordDto);
 	}
 
 	@PostMapping("/auth/logout")

@@ -41,3 +41,53 @@
   color: #ffffff;
   background: #0f3d2e;
 }
+
+.stats-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.stats-table .stats-col-posicion {
+  width: 8%;
+}
+
+.stats-table .stats-col-jugador {
+  width: 40%;
+}
+
+.stats-table .stats-col-dorsal {
+  width: 10%;
+}
+
+.stats-table .stats-col-equipo {
+  width: 30%;
+}
+
+.stats-table .stats-col-valor {
+  width: 12%;
+}
+
+@media (max-width: 576px) {
+  .stats-table .stats-col-dorsal,
+  .stats-table .stats-col-dorsal-cell,
+  .stats-table thead th:nth-child(3),
+  .stats-table tbody td:nth-child(3) {
+    display: none;
+  }
+
+  .stats-table .stats-col-posicion {
+    width: 8%;
+  }
+
+  .stats-table .stats-col-jugador {
+    width: 38%;
+  }
+
+  .stats-table .stats-col-equipo {
+    width: 29%;
+  }
+
+  .stats-table .stats-col-valor {
+    width: 25%;
+  }
+}

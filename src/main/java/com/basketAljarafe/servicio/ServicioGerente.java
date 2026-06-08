@@ -85,7 +85,15 @@ public class ServicioGerente {
 		usuario.setPasswordHash(passwordEncoder.encode(formularioUsuarioDto.getPassword()));
 		usuario.setRol(rol);
 		usuario.setActivo(true);
-		return usuarioRepositorio.save(usuario);
+		
+		try {
+        return usuarioRepositorio.save(usuario);
+    	} catch (org.springframework.dao.DataIntegrityViolationException e) {
+        throw new org.springframework.web.server.ResponseStatusException(
+            org.springframework.http.HttpStatus.CONFLICT,
+            "El nombre de usuario ya está en uso."
+        );
+		}
 	}
 
 	@Transactional

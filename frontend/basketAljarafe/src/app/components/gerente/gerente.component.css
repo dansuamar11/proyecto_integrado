@@ -60,7 +60,7 @@
 
 .modal-floating-alert-fixed {
   position: fixed;
-  top: 50%;
+  top: 23%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: min(28rem, calc(100vw - 2rem));
