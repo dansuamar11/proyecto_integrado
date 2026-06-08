@@ -379,7 +379,7 @@ export class GerenteComponent {
             nombreUsuario: '',
             username: '',
             password: '',
-            nombreRol: 'ARBITRO'
+            nombreRol: 'Árbitro'
           });
           this.usuarios = this.ordenarUsuarios([...this.usuarios, usuarioCreado]);
 

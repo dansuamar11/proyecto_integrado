@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PrivateApiService } from '../../core/services/private-api.service';
@@ -16,20 +16,16 @@ export class LoginComponent {
   private readonly privateApiService = inject(PrivateApiService);
   private readonly sessionService = inject(SessionService);
   private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
 
-  // Variable que sirve para representar el formulario de inicio de sesion.
   protected readonly formularioLogin = this.formBuilder.nonNullable.group({
     username: ['', Validators.required],
     password: ['', Validators.required]
   });
 
-  // Variable que sirve para controlar el estado del envio.
   protected enviando = false;
-
-  // Variable que sirve para almacenar el mensaje de error.
   protected error = '';
 
-  // Metodo que sirve para iniciar sesion contra Spring Security.
   protected iniciarSesion(): void {
     if (this.formularioLogin.invalid) {
       this.formularioLogin.markAllAsTouched();
@@ -44,7 +40,8 @@ export class LoginComponent {
         this.enviando = false;
 
         if (!respuestaSesion.authenticated) {
-          this.error = 'Las credenciales no son validas.';
+          this.error = 'Las credenciales no son válidas.';
+          this.cdr.detectChanges();
           return;
         }
 
@@ -52,8 +49,9 @@ export class LoginComponent {
         this.router.navigate(['/panel']);
       },
       error: () => {
-        this.error = 'Credenciales no validas o servicio no disponible.';
+        this.error = 'Credenciales no válidas.';
         this.enviando = false;
+        this.cdr.detectChanges();
       }
     });
   }

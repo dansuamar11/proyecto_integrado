@@ -39,7 +39,7 @@
         <div>
           <label class="form-label" for="rolUsuario">Rol</label>
           <select id="rolUsuario" class="form-select" formControlName="nombreRol">
-            <option value="ARBITRO">ARBITRO</option>
+            <option value="ARBITRO">ÁRBITRO</option>
             <option value="ENTRENADOR">ENTRENADOR</option>
             <option value="GERENTE" *ngIf="esAdmin()">GERENTE</option>
             <option value="ADMIN" *ngIf="esAdmin()">ADMIN</option>
@@ -119,7 +119,7 @@
           </select>
         </div>
         <div>
-          <label class="form-label" for="partidoAsignacion">Partido pendiente</label>
+          <label class="form-label" for="partidoAsignacion">Partido sin disputar</label>
           <select id="partidoAsignacion" class="form-select" formControlName="idPartido">
             <option [ngValue]="null">Selecciona partido</option>
             <option *ngFor="let partido of partidosPendientes" [ngValue]="partido.idPartido">
